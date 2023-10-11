@@ -14,7 +14,7 @@ pygame.display.set_caption("BIGBOYCOOLPROJECT :)")
 
 class Character:
     def __init__(self, x, y, width, height, color, speed):
-        self.rect = pygame.Rect(x, y, width, height)
+        self.rect = pygame.Rect(x, y, width, height) #hitbox
         self.x = x
         self.y = y
         self.width = width
@@ -27,7 +27,7 @@ class Character:
        
 class Obstacle:
     def __init__(self, x, y, width, height, color):
-        self.rect = pygame.Rect(x, y, width, height)
+        self.rect = pygame.Rect(x, y, width, height) # hitbox
         self.x = x
         self.y = y
         self.width = width
@@ -58,6 +58,22 @@ def move(character):
     if keys[pygame.K_s] and character.y < HEIGHT - character.height:
         character.y += character.speed
         character.rect.y = character.y
+        
+def move2(character):
+    keys = pygame.key.get_pressed()
+    
+    if keys[pygame.K_RIGHT] and character.x < WIDTH-character.width:
+        character.x += character.speed
+        character.rect.x = character.x
+    if keys[pygame.K_LEFT] and character.x > 0:
+        character.x -= character.speed
+        character.rect.x = character.x
+    if keys[pygame.K_UP]:
+        character.y -= character.speed
+        character.rect.y = character.y
+    if keys[pygame.K_DOWN] and character.y < HEIGHT - character.height:
+        character.y += character.speed
+        character.rect.y = character.y
  
 #Functions that handles gravity movement
 def gravity(character):
@@ -70,7 +86,7 @@ def gravity(character):
 #Obstacles      
 Obstacles = [Obstacle(WIDTH-100,HEIGHT-120,20,20, (0,0,0)), Obstacle(WIDTH-200,HEIGHT-220,20,20, (0,0,0)), Obstacle(WIDTH-300,HEIGHT-230,20,20, (0,0,0)), Obstacle(WIDTH-250,HEIGHT-465,20,20, (0,0,0)), Obstacle(WIDTH-350,HEIGHT-652,20,20, (0,0,0)), Obstacle(WIDTH-522,HEIGHT-231,20,20, (0,0,0)), Obstacle(WIDTH-444,HEIGHT-200,20,20, (0,0,0))]
 #Charaters    
-Characters = [Character(100, 300, 50, 50, (255, 0, 0), .4)]
+Characters = [Character(100, 300, 50, 50, (255, 0, 0), .4), Character(200, 250, 50, 50 , (255, 0, 0), .4)]
 
 
 
@@ -82,8 +98,9 @@ while running:
             running = False
 
     #Class the functions that handle movment for the character
-    for i in range(len(Characters)):
-        move(Characters[i])
+    
+    move(Characters[0])
+    move2(Characters[1])
     
     #Calls function that handles gravity
     for i in range(len(Characters)):
