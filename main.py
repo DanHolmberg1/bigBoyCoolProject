@@ -22,7 +22,6 @@ class Character:
         self.color = color
         self.speed = speed
         
-
     def draw(self):
         pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
        
@@ -38,19 +37,6 @@ class Obstacle:
     def draw(self):
         pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
         
-class ObstacleTriangle:
-    def __init__(self, x1, y1, x2, y2, x3, y3, color):
-        self.x1 = x1
-        self.y1 = y1
-        self.x2 = x2
-        self.y2 = y2
-        self.x3 = x3
-        self.y3 = y3
-        self.color = color
-
-    def draw(self):
-        pygame.draw.polygon(screen, self.color, [(self.x1, self.y1), (self.x2, self.y2), (self.x3, self.y3)])
-    
 #Function for testing collision
 def collision(character, obj):
     if character.rect.colliderect(obj.rect):
@@ -79,11 +65,10 @@ def gravity(character):
         character.y += gravityConstant
         character.rect.y = character.y
       
-      
+
+
+#Obstacles      
 Obstacles = [Obstacle(WIDTH-100,HEIGHT-120,20,20, (0,0,0)), Obstacle(WIDTH-200,HEIGHT-220,20,20, (0,0,0)), Obstacle(WIDTH-300,HEIGHT-230,20,20, (0,0,0)), Obstacle(WIDTH-250,HEIGHT-465,20,20, (0,0,0)), Obstacle(WIDTH-350,HEIGHT-652,20,20, (0,0,0)), Obstacle(WIDTH-522,HEIGHT-231,20,20, (0,0,0)), Obstacle(WIDTH-444,HEIGHT-200,20,20, (0,0,0))]
-
-
-
 #Charaters    
 Characters = [Character(100, 300, 50, 50, (255, 0, 0), .4)]
 
@@ -100,28 +85,24 @@ while running:
     for i in range(len(Characters)):
         move(Characters[i])
     
-    
     #Calls function that handles gravity
     for i in range(len(Characters)):
         gravity(Characters[i])
     
+    #Calls function that handles collision
     for o in range(len(Characters)):
         for i in range(len(Obstacles)):
             collision(Characters[o], Obstacles[i])
 
-    
-
     # Clear the screen
     screen.fill(WHITE)
 
-    # Draw the character
+    # Draw the character & obstacles
     for i in range(len(Characters)):
         Characters[i].draw()
     
     for i in range(len(Obstacles)):
         Obstacles[i].draw()
-    
-    
     
     # Update the display
     pygame.display.update()
