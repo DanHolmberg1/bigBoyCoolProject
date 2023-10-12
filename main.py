@@ -1,6 +1,6 @@
 import pygame
 import sys
-
+import time
 
 pygame.init()
 
@@ -8,6 +8,8 @@ pygame.init()
 WIDTH, HEIGHT = 800, 600
 WHITE = (255, 255, 255)
 gravityConstant = .15
+failSound = pygame.mixer.Sound('lossSound.mp3')
+
 
 # Create the game window
     
@@ -73,8 +75,12 @@ def platformCollision(character, platform):
 #Function for testing collision
 def collision(character, obj):
     if character.rect.colliderect(obj.rect):
-       print("collision") 
-      
+        failSound.play()
+        time.sleep(failSound.get_length())
+        global running 
+        running = False
+        
+          
 #Handle character movement    
 def move(character):
     keys = pygame.key.get_pressed()
