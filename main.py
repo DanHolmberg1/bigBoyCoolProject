@@ -52,12 +52,9 @@ class Platform:
 def platformCollision(character, platform):
     if character.rect.bottom == platform.rect.top and platform.rect.left < character.rect.x+character.width and platform.rect.right > character.rect.x:
         #print("yes")
-        gravityON = False
-        gravity(gravityON, character)
-    else:
-        gravityON = True
-        gravity(gravityON, character) 
-        
+        character.y -= gravityConstant
+        character.rect.y = character.y
+            
     if character.rect.top == platform.rect.bottom and platform.rect.left < character.rect.x+character.width and platform.rect.right > character.rect.x:
         character.y += character.speed
         character.rect.y = character.y
@@ -112,8 +109,8 @@ def move2(character):
     #    character.rect.y = character.y
  
 #Functions that handles gravity movement
-def gravity(gravity, character):
-    if character.y < HEIGHT - character.height and gravity == True:
+def gravity(character):
+    if character.y < HEIGHT - character.height:
         character.y += gravityConstant
         character.rect.y = character.y      
 
@@ -141,15 +138,15 @@ while running:
     
     #Calls function that handles gravity
         
-    #for i in range(len(Characters)):
-     #   gravity(Characters[i])
+    for i in range(len(Characters)):
+        gravity(Characters[i])
         
     
     #Calls function that handles collision
     for o in range(len(Characters)):
         for i in range(len(Obstacles)):
             collision(Characters[o], Obstacles[i])
-    #Calls function that handles Platform collision and calls gravity :)
+    #Calls function that handles Platform collision
     for o in range(len(Characters)):
         for i in range(len(Platforms)):
             platformCollision(Characters[o], Platforms[i])
