@@ -61,7 +61,16 @@ def platformCollision(character, platform):
     if character.rect.top == platform.rect.bottom and platform.rect.left < character.rect.x+character.width and platform.rect.right > character.rect.x:
         character.y += character.speed
         character.rect.y = character.y
-
+    
+    if character.rect.left == platform.rect.right: 
+        if character.rect.y+character.height > platform.rect.top and character.rect.y < platform.rect.bottom:            
+            character.x += character.speed
+            character.rect.x = character.x
+            
+    if character.rect.right == platform.rect.left: 
+        if character.rect.y+character.height > platform.rect.top and character.rect.y < platform.rect.bottom:            
+            character.x -= character.speed
+            character.rect.x = character.x
     
             
 #Function for testing collision
