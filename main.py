@@ -7,7 +7,7 @@ pygame.init()
 
 WIDTH, HEIGHT = 600, 600
 WHITE = (255, 255, 255)
-JUMPDURATION = 200
+JUMPDURATION = 100
 SPEED = 1
 gravityConstant = .5
 failSound = pygame.mixer.Sound('lossSound.mp3')
@@ -15,6 +15,8 @@ timeKeyPressed_W = 0
 timeKeyPressed_UP = 0
 jumpAllowed_W = False
 jumpAllowed_UP = False
+key_wUP = False
+key_upUP = False
 clock = pygame.time.Clock()
 FPS = 240
 
@@ -133,10 +135,19 @@ def makeLevel(level):
 #Obstacles      
 Obstacles = []
 #Charaters    
-Characters = [Character(100, 300, 20, 20, (255, 0, 0), SPEED), Character(200, 250, 20, 20 , (255, 0, 0), SPEED)]
+Characters = [Character(50, 500, 20, 20, (255, 0, 0), SPEED), Character(20, 500, 20, 20 , (255, 0, 0), SPEED)]
 #Platforms
 Platforms = []
-       
+
+def checkKeyUp():
+    keys = pygame.key.get_pressed()
+    global key_wUP
+    global key_upUP
+    if not keys[pygame.K_w]:
+        key_wUP = True
+    if not keys[pygame.K_UP]:
+        key_upUP = True
+
 #Function that handles collision detection between platforms and characters        
 def platformCollision(character, platform):
     if character.rect.bottom == platform.rect.top and platform.rect.left < character.rect.x+character.width and platform.rect.right > character.rect.x:
@@ -187,7 +198,7 @@ def move0(character):
     if keys[pygame.K_a] and character.x > 0:
         character.x -= character.speed
         character.rect.x = character.x
-    if keys[pygame.K_w] and character.y > 0 and jumpAllowed_W == True:
+    if keys[pygame.K_w] and character.y > 0 and jumpAllowed_W == True and key_wUP == False:
         timeKeyPressed_W += 1
         print(timeKeyPressed_W)
          # funkar inte men 
@@ -209,7 +220,7 @@ def move01(character):
     if keys[pygame.K_LEFT] and character.x > 0:
         character.x -= character.speed
         character.rect.x = character.x
-    if keys[pygame.K_UP] and character.y > 0 and jumpAllowed_UP == True:
+    if keys[pygame.K_UP] and character.y > 0 and jumpAllowed_UP == True and key_upUP == False:
         timeKeyPressed_UP += 1
         print(timeKeyPressed_UP)
          # funkar inte men 
@@ -224,15 +235,20 @@ def reset0(reset):
     if reset == True:
         global timeKeyPressed_W
         timeKeyPressed_W = 0
+        
 def reset1(reset):
     if reset == True:
         global timeKeyPressed_UP
+        global key_upUP
         timeKeyPressed_UP = 0
+        key_upUP = False
 
 def canJump0(canJump):
     global jumpAllowed_W
+    global key_wUP
     if canJump == False and timeKeyPressed_W == 0:
         jumpAllowed_W = False
+        key_wUP = False
     else:
         jumpAllowed_W = True
 def canJump1(canJump):
@@ -289,7 +305,7 @@ while running: # Main loop
     for o in range(len(Characters)):
         for i in range(len(Platforms)):
             platformCollision(Characters[o], Platforms[i])
-    
+    checkKeyUp()
     # Clear the screen
     screen.fill(WHITE)
 
@@ -310,6 +326,5 @@ while running: # Main loop
     clock.tick(FPS)
     
     
-
 pygame.quit()
 sys.exit()
