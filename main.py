@@ -298,6 +298,7 @@ while running: # Main loop
     
     for i in range(len(Obstacles)):
         Obstacles[i].draw()
+        Obstacles[i].drawHitbox()
     
     for i in range(len(Platforms)):
         Platforms[i].draw()
