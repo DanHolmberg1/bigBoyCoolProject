@@ -73,7 +73,58 @@ class Platform:
         self.color = color
     def draw(self):
         pygame.draw.rect(screen, self.color, self.rect)
-  
+
+level_1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2.75, 2.5, 2.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2.75, 2.0, 2.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.25, 1.25, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2.0, 2.0, 2.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0, 2.75, 0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 2.75, 0, 0, 0, 0, 0, 0, 0, 1.0, 2.75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 1.0, 2.75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0, 2.75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2.25, 1.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2.25, 1.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2.0, 2.0, 2.0, 2.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2.0, 2.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 2.0, 0, 0, 0, 0, 0, 1.0, 1.0, 0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+
+
+def makeLevel(level):
+    cnt = 0
+    width = 30
+    height = 30
+    spikeWidth = 20
+    spikeHeight = 7
+    for x in range(20):
+        for y in range(20):
+            if math.floor(level[cnt]) == 1:
+                platform = Platform(y*30, x*30,width,height, (150, 75, 0))
+                Platforms.append(platform) 
+            elif math.floor(level[cnt]) == 2:
+                print("hello")
+                if level[cnt]%1 == 0:
+                    print("hello1")
+                    triangle_points = [(y*30, x*30+30), (y*30 +15, x*30+15), (y*30+30, x*30+30)]
+                    xS = triangle_points[0][0] + (30 - spikeWidth)/2
+                    yS = triangle_points[0][1] - spikeHeight
+                    obstacle = Obstacle(xS, yS, spikeWidth,spikeHeight, (128,128,128), triangle_points)
+                    Obstacles.append(obstacle)
+                elif level[cnt]%1 == 0.25: 
+                    print("hello2")
+                    triangle_points = [(y*30+30, x*30), (y*30 +15, x*30+15), (y*30+30, x*30+30)]
+                    xS = triangle_points[0][0] + (30 - spikeWidth)/2
+                    yS = triangle_points[0][1] - spikeHeight
+                    obstacle = Obstacle(xS, yS, spikeWidth,spikeHeight, (128,128,128), triangle_points)
+                    Obstacles.append(obstacle)
+                elif level[cnt]%1 == 0.5:
+                    print("hello3")
+                    triangle_points = [(y*30, x*30), (y*30 +15, x*30+15), (y*30+30, x*30)]
+                    xS = triangle_points[0][0] + (30 - spikeWidth)/2
+                    yS = triangle_points[0][1] - spikeHeight
+                    obstacle = Obstacle(xS, yS, spikeWidth,spikeHeight, (128,128,128), triangle_points)
+                    Obstacles.append(obstacle)
+                elif level[cnt]%1 == 0.75:
+                    print("hello4")
+                    triangle_points = [(y*30, x*30), (y*30 +15, x*30+15), (y*30, x*30+30)]
+                    xS = triangle_points[0][0] + (30 - spikeWidth)/2
+                    yS = triangle_points[0][1] - spikeHeight
+                    obstacle = Obstacle(xS, yS, spikeWidth,spikeHeight, (128,128,128), triangle_points)
+                    Obstacles.append(obstacle)
+                print()
+            cnt += 1
+
+
 #Obstacles      
 Obstacles = [Obstacle(WIDTH-100,HEIGHT-120,20,20, (0,0,0)), Obstacle(WIDTH-200,HEIGHT-220,20,20, (0,0,0)), Obstacle(WIDTH-300,HEIGHT-230,20,20, (0,0,0)), Obstacle(WIDTH-250,HEIGHT-465,20,20, (0,0,0)), Obstacle(WIDTH-350,HEIGHT-652,20,20, (0,0,0)), Obstacle(WIDTH-522,HEIGHT-231,20,20, (0,0,0)), Obstacle(WIDTH-444,HEIGHT-200,20,20, (0,0,0))]
 #Charaters    
@@ -205,7 +256,9 @@ def gravity(character):
             canJump0(True)
         if character == Characters[1]:
             canJump1(True)
-        
+
+makeLevel(level_1)
+
 running = True
 while running: # Main loop
     
