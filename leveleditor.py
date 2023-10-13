@@ -4,7 +4,7 @@ import math
 import sys
 
 pygame.init()
-
+file_path = 'levels.txt'
 
 # Set up the drawing window
 screen = pygame.display.set_mode([600, 600])
@@ -94,7 +94,10 @@ def test_button_press():
         r_key_pressed = False
 
     if keys[pygame.K_g] and not g_key_pressed:
-        print(block_grid)
+        x = ", ".join(str(item) for item in block_grid)
+        with open(file_path, 'a') as file:
+            file.write(x+"\n")
+        print(x)
         g_key_pressed = True
     elif not keys[pygame.K_g]:
         g_key_pressed = False
