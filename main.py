@@ -102,28 +102,28 @@ def makeLevel(level):
                     triangle_points = [(y*30, x*30+30), (y*30 +15, x*30+15), (y*30+30, x*30+30)]
                     xS = triangle_points[0][0] + (30 - spikeWidth)/2
                     yS = triangle_points[0][1] - spikeHeight
-                    obstacle = Obstacle(xS, yS, spikeWidth,spikeHeight, (128,128,128), triangle_points)
+                    obstacle = Obstacle(xS, yS, spikeWidth, spikeHeight, (128,128,128), triangle_points)
                     Obstacles.append(obstacle)
                 elif level[cnt]%1 == 0.25: 
                     print("hello2")
                     triangle_points = [(y*30+30, x*30), (y*30 +15, x*30+15), (y*30+30, x*30+30)]
-                    xS = triangle_points[0][0] + (30 - spikeWidth)/2
-                    yS = triangle_points[0][1] - spikeHeight
-                    obstacle = Obstacle(xS, yS, spikeWidth,spikeHeight, (128,128,128), triangle_points)
+                    xS = triangle_points[0][0] - (spikeHeight)
+                    yS = triangle_points[0][1] + (30-spikeWidth)/2
+                    obstacle = Obstacle(xS, yS, spikeHeight, spikeWidth, (128,128,128), triangle_points)
                     Obstacles.append(obstacle)
                 elif level[cnt]%1 == 0.5:
                     print("hello3")
                     triangle_points = [(y*30, x*30), (y*30 +15, x*30+15), (y*30+30, x*30)]
                     xS = triangle_points[0][0] + (30 - spikeWidth)/2
-                    yS = triangle_points[0][1] - spikeHeight
-                    obstacle = Obstacle(xS, yS, spikeWidth,spikeHeight, (128,128,128), triangle_points)
+                    yS = triangle_points[0][1]
+                    obstacle = Obstacle(xS, yS, spikeWidth, spikeHeight, (128,128,128), triangle_points)
                     Obstacles.append(obstacle)
                 elif level[cnt]%1 == 0.75:
                     print("hello4")
                     triangle_points = [(y*30, x*30), (y*30 +15, x*30+15), (y*30, x*30+30)]
-                    xS = triangle_points[0][0] + (30 - spikeWidth)/2
-                    yS = triangle_points[0][1] - spikeHeight
-                    obstacle = Obstacle(xS, yS, spikeWidth,spikeHeight, (128,128,128), triangle_points)
+                    xS = triangle_points[0][0]
+                    yS = triangle_points[0][1] + spikeHeight
+                    obstacle = Obstacle(xS, yS, spikeHeight, spikeWidth, (128,128,128), triangle_points)
                     Obstacles.append(obstacle)
                 print()
             cnt += 1
