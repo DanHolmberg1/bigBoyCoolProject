@@ -6,10 +6,13 @@ pygame.init()
 
 WIDTH, HEIGHT = 800, 600
 WHITE = (255, 255, 255)
+JUMPDURATION = 200
 gravityConstant = .15
 failSound = pygame.mixer.Sound('lossSound.mp3')
 timeKeyPressed_W = 0
 timeKeyPressed_UP = 0
+jumpAllowed_W = False
+jumpAllowed_UP = False
 
 
 
@@ -69,6 +72,10 @@ def platformCollision(character, platform):
             reset0(True)
         if character == Characters[1]:
             reset1(True)
+        if character == Characters[0]:
+            canJump0(True)
+        if character == Characters[1]:
+            canJump1(True)
         
         
             
@@ -105,12 +112,12 @@ def move0(character):
     if keys[pygame.K_a] and character.x > 0:
         character.x -= character.speed
         character.rect.x = character.x
-    if keys[pygame.K_w] and character.y > 0:
+    if keys[pygame.K_w] and character.y > 0 and jumpAllowed_W == True:
         timeKeyPressed_W += 1
         print(timeKeyPressed_W)
          # funkar inte men 
 
-        if timeKeyPressed_W < 500:
+        if timeKeyPressed_W < JUMPDURATION:
             character.y -= character.speed+.15
             character.rect.y = character.y   
    # if keys[pygame.K_s] and character.y < HEIGHT - character.height: Downward movment if you want to be able to move0 through a platform and speed down.
@@ -127,12 +134,12 @@ def move01(character):
     if keys[pygame.K_LEFT] and character.x > 0:
         character.x -= character.speed
         character.rect.x = character.x
-    if keys[pygame.K_UP] and character.y > 0:
+    if keys[pygame.K_UP] and character.y > 0 and jumpAllowed_UP == True:
         timeKeyPressed_UP += 1
         print(timeKeyPressed_UP)
          # funkar inte men 
 
-        if timeKeyPressed_UP < 500:
+        if timeKeyPressed_UP < JUMPDURATION:
             character.y -= character.speed+.15
             character.rect.y = character.y
     #if keys[pygame.K_DOWN] and character.y < HEIGHT - character.height:
@@ -146,17 +153,39 @@ def reset1(reset):
     if reset == True:
         global timeKeyPressed_UP
         timeKeyPressed_UP = 0
+
+def canJump0(canJump):
+    global jumpAllowed_W
+    if canJump == False and timeKeyPressed_W == 0:
+        jumpAllowed_W = False
+    else:
+        jumpAllowed_W = True
+def canJump1(canJump):
+    global jumpAllowed_UP
+    if canJump == False and timeKeyPressed_W == 0:
+        jumpAllowed_UP = False
+    else:
+        jumpAllowed_UP = True
+
         
 #Functions that handles gravity move0ment
 def gravity(character):
     if character.y < HEIGHT - character.height:
         character.y += gravityConstant
-        character.rect.y = character.y  
+        character.rect.y = character.y
+        if character == Characters[0]:
+            canJump0(False)
+        if character == Characters[1]:
+            canJump1(False)  
     else: 
         if character == Characters[0]:
             reset0(True)
         if character == Characters[1]:
             reset1(True)
+        if character == Characters[0]:
+            canJump0(True)
+        if character == Characters[1]:
+            canJump1(True)
         
 running = True
 while running: # Main loop
