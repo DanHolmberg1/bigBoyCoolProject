@@ -18,6 +18,22 @@ clock = pygame.time.Clock()
 FPS = 240
 
 
+#Imports Maps
+def read_lists_from_file(filename):
+    with open(filename, 'r') as file:
+        lists = []
+        for line in file:
+            elements = line.strip().split(', ')  # Assuming elements are separated by a comma and a space
+            list_data = [element.strip() for element in elements]
+            lists.append(list_data)
+    return lists
+file_path = 'levels.txt'
+imported_lists = read_lists_from_file(file_path)
+print(imported_lists)
+
+
+
+
 
 # Create the game window
     
