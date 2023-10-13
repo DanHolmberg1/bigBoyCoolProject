@@ -162,7 +162,7 @@ def canJump0(canJump):
         jumpAllowed_W = True
 def canJump1(canJump):
     global jumpAllowed_UP
-    if canJump == False and timeKeyPressed_W == 0:
+    if canJump == False and timeKeyPressed_UP == 0:
         jumpAllowed_UP = False
     else:
         jumpAllowed_UP = True
