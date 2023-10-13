@@ -73,11 +73,13 @@ def draw_rect_on_mouse():
 
 s_key_pressed = False
 r_key_pressed = False
+g_key_pressed = False
 
 
 def test_button_press():
     global s_key_pressed
     global r_key_pressed
+    global g_key_pressed
     keys = pygame.key.get_pressed()
     if keys[pygame.K_s] and not s_key_pressed:
         change_block()
@@ -91,14 +93,37 @@ def test_button_press():
     elif not keys[pygame.K_r]:
         r_key_pressed = False
 
-    if event.type == pygame.MOUSEBUTTONDOWN:
-        if event.button == 1:  # Left mouse button
-            change_block_on_mouse((block_number+1)+block.rotation*0.25)
-        elif event.button == 3:  # Right mouse button
-            change_block_on_mouse(0)
+    if keys[pygame.K_g] and not g_key_pressed:
+        print(block_grid)
+        g_key_pressed = True
+    elif not keys[pygame.K_g]:
+        g_key_pressed = False
+
+    left_click, _, right_click = pygame.mouse.get_pressed()
+
+    if left_click:  # Left mouse button
+        change_block_on_mouse((block_number+1)+block.rotation*0.25)
+    elif right_click:
+        change_block_on_mouse(0)
+
+
+
+
 
 rotations = [0,1,2,3]
 rotation_now = 0
+
+font = pygame.font.Font(None, 36)  # You can adjust the font size
+
+def draw_text():
+    text_rotate = font.render("R: Rotate block", True, (0, 0, 0))
+    text_switch = font.render("S: Switch block", True, (0, 0, 0))
+    text_save = font.render("G: Save code", True, (0, 0, 0))
+
+    screen.blit(text_rotate, (10, 10))
+    screen.blit(text_switch, (10, 46))
+    screen.blit(text_save, (10, 82))
+
 
 def rotate_block():
     global rotation_now
@@ -106,7 +131,6 @@ def rotate_block():
         rotation_now += 1
     else:
         rotation_now = 0
-    print(rotation_now)
     block.rotation = rotations[rotation_now]
 
 def change_block_on_mouse(x):
@@ -188,6 +212,7 @@ while running:
     draw_rect_on_mouse()
 
     test_button_press()
+    draw_text()
     draw_blocks()
 
     # Flip the display
