@@ -7,12 +7,15 @@ pygame.init()
 WIDTH, HEIGHT = 800, 600
 WHITE = (255, 255, 255)
 JUMPDURATION = 200
-gravityConstant = .15
+SPEED = 1
+gravityConstant = .5
 failSound = pygame.mixer.Sound('lossSound.mp3')
 timeKeyPressed_W = 0
 timeKeyPressed_UP = 0
 jumpAllowed_W = False
 jumpAllowed_UP = False
+clock = pygame.time.Clock()
+FPS = 240
 
 
 
@@ -58,7 +61,7 @@ class Platform:
 #Obstacles      
 Obstacles = [Obstacle(WIDTH-100,HEIGHT-120,20,20, (0,0,0)), Obstacle(WIDTH-200,HEIGHT-220,20,20, (0,0,0)), Obstacle(WIDTH-300,HEIGHT-230,20,20, (0,0,0)), Obstacle(WIDTH-250,HEIGHT-465,20,20, (0,0,0)), Obstacle(WIDTH-350,HEIGHT-652,20,20, (0,0,0)), Obstacle(WIDTH-522,HEIGHT-231,20,20, (0,0,0)), Obstacle(WIDTH-444,HEIGHT-200,20,20, (0,0,0))]
 #Charaters    
-Characters = [Character(100, 300, 20, 20, (255, 0, 0), .30), Character(200, 250, 20, 20 , (255, 0, 0), .30)]
+Characters = [Character(100, 300, 20, 20, (255, 0, 0), SPEED), Character(200, 250, 20, 20 , (255, 0, 0), SPEED)]
 #Platforms
 Platforms = [Platform(200, 200, 400, 20, (255, 255, 0)), Platform(300, 300, 200, 20, (25, 255, 0)), Platform(200, HEIGHT-150, 200, 20, (0,0,0)), Platform(100, HEIGHT-50, 200, 20, (0,0,0))]
        
@@ -228,6 +231,8 @@ while running: # Main loop
     
     # Update the display
     pygame.display.update()
+
+    clock.tick(FPS)
     
     
 
