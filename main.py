@@ -56,8 +56,9 @@ class Character:
         pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
        
 class Obstacle: 
-    def __init__(self, x, y, width, height, color):
+    def __init__(self, x, y, width, height, color,trianglePoints):
         self.rect = pygame.Rect(x, y, width, height) # hitbox
+        self.trianglePoints = trianglePoints
         self.x = x
         self.y = y
         self.width = width
@@ -65,7 +66,10 @@ class Obstacle:
         self.color = color
 
     def draw(self):
-        pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
+        pygame.draw.polygon(screen, self.color, self.trianglePoints)
+    
+    def drawHitbox(self):
+        pygame.draw.rect(screen, (255,0,0), (self.x, self.y, self.width, self.height))
                
 class Platform:
     def __init__(self, x, y, width, height, color):
