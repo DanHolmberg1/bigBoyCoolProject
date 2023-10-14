@@ -152,6 +152,7 @@ def win(): # When you complete a map
     global Obstacles
     global Platforms
     global winAreas
+    
     levelNr = 0
     winSound.play()
     pygame.time.delay(int(winSound.get_length()*1000))
@@ -161,9 +162,9 @@ def win(): # When you complete a map
         Characters[i].x = STARTPOSX
         Characters[i].y = STARTPOSY
         
-        Obstacles = []
-        #Platforms = []
-        winAreas = []    
+    Obstacles = []
+    Platforms.clear() # this kills you
+    winAreas = []    
     makeLevel(levels[levelNr])
     
     
@@ -382,7 +383,7 @@ while running: # Main loop
 #########################################################################   
 
 
-    #Calls function that handles collision
+   #Calls function that handles collision
     for o in range(len(Characters)):
         for i in range(len(Obstacles)):
             collision(Characters[o], Obstacles[i])
@@ -432,7 +433,7 @@ while running: # Main loop
     for i in range(len(winAreas)):
         winAreas[i].draw()
     
-
+    
 
 #########################################################################
 
