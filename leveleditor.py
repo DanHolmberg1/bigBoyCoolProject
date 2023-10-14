@@ -4,7 +4,7 @@ import math
 import sys
 
 pygame.init()
-file_path = 'levels.txt'
+
 
 # Set up the drawing window
 screen = pygame.display.set_mode([600, 600])
@@ -17,7 +17,7 @@ class Block:
         self.color = color
         self.shape = shape
 
-blocks = [Block("dirt", 0, (150, 75, 0), "rectangle"), Block("spike", 0, (128, 128, 128), "triangle")]
+blocks = [Block("dirt", 0, (150, 75, 0), "rectangle"), Block("spike", 0, (128, 128, 128), "triangle"), Block("goal", 0,(255,0,0),"rectangle")]
 
 block = blocks[0]
 block_number = 0
@@ -94,10 +94,7 @@ def test_button_press():
         r_key_pressed = False
 
     if keys[pygame.K_g] and not g_key_pressed:
-        x = ", ".join(str(item) for item in block_grid)
-        with open(file_path, 'a') as file:
-            file.write(x+"\n")
-        print(x)
+        print(block_grid)
         g_key_pressed = True
     elif not keys[pygame.K_g]:
         g_key_pressed = False
@@ -180,6 +177,9 @@ def draw_blocks():
                 pygame.draw.polygon(
                     screen, triangle_outline_color, triangle_points, 2)
                 # pygame.draw.rect(screen, (128,128,128), (y*30, x*30, rect_width, rect_height))
+            elif math.floor(block_grid[cnt]) == 3:
+                pygame.draw.rect(screen, (255, 0, 0),(y*30, x*30, rect_width, rect_height))
+
             cnt += 1
 
 
