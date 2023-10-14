@@ -11,6 +11,7 @@ JUMPDURATION = 150 # Jump duration in game ticks
 SPEED = 1 # Character speed in pixels per game tick
 gravityConstant = .5 # Gravity constant in pixels per game tick
 failSound = pygame.mixer.Sound('lossSound.mp3') # Sound for the fail sound
+winSound = pygame.mixer.Sound('winSound.mp3') # Sound for the win sound
 timeKeyPressed_W = 0 # Counter for jumpduration in game ticks for key_w
 timeKeyPressed_UP = 0 # Counter for jumpduration in game ticks for key_UP
 jumpAllowed_W = False # Flag for if jumping is allowed for W
@@ -68,6 +69,14 @@ class Platform: # A class for the creation of a platforms
         self.color = color
     def draw(self):
         pygame.draw.rect(screen, self.color, self.rect)
+        
+class winArea: # A class for the creation of a Win Area
+    def __init__(self, x, y, width, height, color):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.color = color
+    def draw(self):
+        pygame.draw.rect(screen, self.color, self.rect)
+
 
 
 #########################################################################
@@ -132,11 +141,17 @@ def makeLevel(level): # Ask David
                     Obstacles.append(obstacle)
                 print()
             elif math.floor(level[cnt]) == 3:
-                platform = Platform(y*30, x*30,width,height, (255, 0, 0))    ###This should be the finish not a platform...
-                Platforms.append(platform) 
+                area = winArea(y*30, x*30,width,height, (255, 0, 0))    ###This should be the finish not a platform... its now a win area :)
+                winAreas.append(area) 
             cnt += 1
 
-
+def win(): # When you win!
+    global running
+    winSound.play()
+    pygame.time.delay(int(winSound.get_length()*1000))
+    running = False
+    print("You won!")
+    
 
 #########################################################################
 
@@ -144,10 +159,12 @@ def makeLevel(level): # Ask David
 Obstacles = [] # A list of all the obstacles
 
     
-Characters = [Character(50, 500, 20, 20, (255, 0, 0), SPEED), Character(20, 500, 20, 20 , (255, 0, 0), SPEED)] # A list of all the characters
+Characters = [Character(0, 500, 20, 20, (255, 100, 100), SPEED), Character(0, 500, 20, 20 , (255, 0, 0), SPEED)] # A list of all the characters
 
 
 Platforms = [] # A list of all the platforms
+
+winAreas = [] # A list of all the
 
 #########################################################################
 
@@ -164,6 +181,22 @@ def checkKeyUp(): # Function that checks if a key is realesed and if so block if
 
 #########################################################################
 
+
+def winCollision(character, platform): # Function that checks if you colide with the block that makes you win
+    if character.rect.bottom == platform.rect.top and platform.rect.left < character.rect.x+character.width and platform.rect.right > character.rect.x:
+       win() 
+        
+            
+    if character.rect.top == platform.rect.bottom and platform.rect.left < character.rect.x+character.width and platform.rect.right > character.rect.x:
+        win()
+        
+    if character.rect.left == platform.rect.right: 
+        if character.rect.y+character.height > platform.rect.top and character.rect.y < platform.rect.bottom:            
+            win()
+            
+    if character.rect.right == platform.rect.left: 
+        if character.rect.y+character.height > platform.rect.top and character.rect.y < platform.rect.bottom:            
+           win()
 
         
 def platformCollision(character, platform): # Function that handles collision detection between platforms and characters
@@ -349,6 +382,12 @@ while running: # Main loop
         for i in range(len(Platforms)):
             platformCollision(Characters[o], Platforms[i])
 
+    #Calls function that checks if you won
+    for o in range(len(Characters)):
+        for i in range(len(winAreas)):
+            winCollision(Characters[o], winAreas[i])
+
+
 
 #########################################################################  
  
@@ -370,6 +409,10 @@ while running: # Main loop
     
     for i in range(len(Platforms)):
         Platforms[i].draw()
+    
+    for i in range(len(winAreas)):
+        winAreas[i].draw()
+    
 
 
 #########################################################################
