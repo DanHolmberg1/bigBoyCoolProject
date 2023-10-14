@@ -149,6 +149,9 @@ def makeLevel(level): # Ask David
             cnt += 1
 
 def win(): # When you complete a map
+    global Obstacles
+    global Platforms
+    global winAreas
     levelNr = 0
     winSound.play()
     pygame.time.delay(int(winSound.get_length()*1000))
@@ -157,7 +160,10 @@ def win(): # When you complete a map
     for i in range(len(Characters)):
         Characters[i].x = STARTPOSX
         Characters[i].y = STARTPOSY
-        
+    
+    Obstacles = []
+    Platforms = []
+    winAreas = []    
     makeLevel(levels[levelNr])
     
     
