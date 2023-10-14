@@ -9,7 +9,7 @@ WIDTH, HEIGHT = 600, 600 # Width and Height of the window
 WHITE = (255, 255, 255) # The color white
 JUMPDURATION = 150 # Jump duration in game ticks
 SPEED = 1 # Character speed in pixels per game tick
-STARTPOSX = 0 # Start position on the x axis
+STARTPOSX = 5 # Start position on the x axis
 STARTPOSY = 500 # Start position on the y axis
 gravityConstant = .5 # Gravity constant in pixels per game tick
 failSound = pygame.mixer.Sound('lossSound.mp3') # Sound for the fail sound
@@ -160,10 +160,10 @@ def win(): # When you complete a map
     for i in range(len(Characters)):
         Characters[i].x = STARTPOSX
         Characters[i].y = STARTPOSY
-    
-    Obstacles = []
-    Platforms = []
-    winAreas = []    
+        
+        Obstacles = []
+        #Platforms = []
+        winAreas = []    
     makeLevel(levels[levelNr])
     
     
