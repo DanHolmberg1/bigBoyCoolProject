@@ -155,7 +155,7 @@ def win(): # When you complete a map
     
     levelNr = 0
     winSound.play()
-    pygame.time.delay(int(winSound.get_length()*1000))
+    #pygame.time.delay(int(winSound.get_length()*1000))
     print(f"You completed area {levelNr+1}!")
     levelNr += 1
     for i in range(len(Characters)):
@@ -163,7 +163,7 @@ def win(): # When you complete a map
         Characters[i].y = STARTPOSY
         
     Obstacles = []
-    Platforms.clear() # this kills you
+    Platforms = [] # this kills you
     winAreas = []    
     makeLevel(levels[levelNr])
     
@@ -445,3 +445,4 @@ while running: # Main loop
     
 pygame.quit()
 sys.exit()
+
