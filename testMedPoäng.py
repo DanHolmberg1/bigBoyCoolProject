@@ -22,6 +22,7 @@ key_wUP = False # Flag for if key_w is realsed
 key_upUP = False # Flag for if key_UP is realsed
 file_path = 'levels.txt' # File path for textfile with all the levels
 levelNr = 0
+nrOfDeaths = 0
 clock = pygame.time.Clock() # Used to control the speed of the game
 FPS = 240 # Frames per second (game ticks per second)
 
@@ -275,11 +276,19 @@ def gravity(character): # Functions that handles gravity move0ment
 
 
 def collision(character, obj): # Function for testing collision and plays a sound if you collided and then exits the game
+    global nrOfDeaths
+    global running
     if character.rect.colliderect(obj.rect):
-        failSound.play()
-        pygame.time.delay(int(failSound.get_length()*1000))
-        global running 
-        running = False
+        nrOfDeaths += 1
+        print(f"You have {3-nrOfDeaths} lifes left!")
+        if nrOfDeaths < 3:
+            for i in range(len(Characters)):
+                Characters[i].x = STARTPOSX
+                Characters[i].y = STARTPOSY
+        else: 
+            failSound.play()
+            makeLevel(levels[0])
+            nrOfDeaths = 0        
 
 
 #########################################################################
