@@ -104,11 +104,17 @@ def read_lists_from_file(filename): # Reads levels.txt to load maps
 
 
 def makeLevel(level): # Ask David
+    global Obstacles
+    global Platforms
+    global winAreas
     cnt = 0
     width = 30
     height = 30
     spikeWidth = 20
     spikeHeight = 7
+    Obstacles = []
+    Platforms = []
+    winAreas = []
     for x in range(20):
         for y in range(20):
             if math.floor(level[cnt]) == 1:
@@ -151,9 +157,6 @@ def makeLevel(level): # Ask David
             cnt += 1
 
 def win(): # When you complete a map
-    global Obstacles
-    global Platforms
-    global winAreas
     global levelNr
     
     winSound.play()
@@ -163,11 +166,7 @@ def win(): # When you complete a map
     print(levelNr)
     for i in range(len(Characters)):
         Characters[i].x = STARTPOSX
-        Characters[i].y = STARTPOSY
-        
-    Obstacles = []
-    Platforms = []
-    winAreas = []    
+        Characters[i].y = STARTPOSY    
     makeLevel(levels[levelNr])
     
     
@@ -281,14 +280,22 @@ def collision(character, obj): # Function for testing collision and plays a soun
     if character.rect.colliderect(obj.rect):
         nrOfDeaths += 1
         print(f"You have {3-nrOfDeaths} lifes left!")
-        if nrOfDeaths < 3:
+        if nrOfDeaths < 300:
             for i in range(len(Characters)):
                 Characters[i].x = STARTPOSX
+                Characters[i].rect.x = STARTPOSX
                 Characters[i].y = STARTPOSY
+                Characters[i].rect.y = STARTPOSY
         else: 
             failSound.play()
+            for i in range(len(Characters)):
+                Characters[i].x = STARTPOSX
+                Characters[i].rect.x = STARTPOSX
+                Characters[i].y = STARTPOSY
+                Characters[i].rect.y = STARTPOSY
             makeLevel(levels[0])
-            nrOfDeaths = 0        
+            nrOfDeaths = 0     
+            print(nrOfDeaths)   
 
 
 #########################################################################
