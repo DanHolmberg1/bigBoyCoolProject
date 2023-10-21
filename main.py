@@ -8,23 +8,20 @@ pygame.init()
 WIDTH, HEIGHT = 600, 600 # Width and Height of the window
 WHITE = (255, 255, 255) # The color white
 JUMPDURATION = 100 # Jump duration in game ticks
-SPEED = 1 # Character speed in pixels per game tick
+SPEED = 0.7 # Character speed in pixels per game tick
 STARTPOSX = 5 # Start position on the x axis
-STARTPOSY = 500 # Start position on the y axis
+STARTPOSY = 400 # Start position on the y axis
 gravityConstant = .03 # Gravity constant in pixels per game tick
 failSound = pygame.mixer.Sound('lossSound.mp3') # Sound for the fail sound
 winSound = pygame.mixer.Sound('winSound.mp3') # Sound for the win sound
-timeKeyPressed_W = 0 # Counter for jumpduration in game ticks for key_w
-timeKeyPressed_UP = 0 # Counter for jumpduration in game ticks for key_UP
-jumpAllowed_W = False # Flag for if jumping is allowed for W
-jumpAllowed_UP = False # Flag for if jumping is allowed for UP
-key_wUP = False # Flag for if key_w is realsed
-key_upUP = False # Flag for if key_UP is realsed
 file_path = 'levels.txt' # File path for textfile with all the levels
 levelNr = 0
 nrOfDeaths = 0
 clock = pygame.time.Clock() # Used to control the speed of the game
 FPS = 240 # Frames per second (game ticks per second)
+characterOnPlatformList = []
+characterOnPlatform = False
+
 
 
 #########################################################################
@@ -47,7 +44,9 @@ class Character: # A class for the creation of a characters
         self.height = height
         self.color = color
         self.speed = speed
-        self.velocity = 0 
+        self.vY = 0 
+        self.vX = 0 
+        self.collision = {"right": False, "left": False, "upp": False, "down": False}
         
     def draw(self):
         pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
@@ -191,15 +190,6 @@ winAreas = [] # A list of all the win areas :)
 #########################################################################
 
 
-def checkKeyUp(): # Function that checks if a key is realesed and if so block if from being pressed (mitigated by gravity and platformCollision to allow jumping if on ground or platform collision)
-    keys = pygame.key.get_pressed()
-    global key_wUP
-    global key_upUP
-    if not keys[pygame.K_w]:
-        key_wUP = True
-    if not keys[pygame.K_UP]:
-        key_upUP = True
-
 
 #########################################################################
 
@@ -222,75 +212,13 @@ def winCollision(character, platform): # Function that checks if you colide with
 
 characterOnPlatform = True 
 
-def rectangularCollision(rectangle1, rectangle2):
-    return(rectangle1.x + rectangle1.width >=
-      rectangle2.rect.x and
-
-    rectangle1.x <=
-      rectangle2.rect.x + rectangle2.rect.width  and
-
-    rectangle1.y <=
-      rectangle2.rect.y + rectangle2.rect.height and
-
-    rectangle1.y + rectangle1.height >=
-      rectangle2.rect.y
-  );
-
-
-
-        
-def platformCollision(character, platform): # Function that handles collision detection between platforms and characters
-    if character.rect.bottom == platform.rect.top and platform.rect.left < character.rect.x+character.width and platform.rect.right > character.rect.x:
-        global characterOnPlatform
-        characterOnPlatform = True 
-        character.velocity = 0
-        #print(character.velocity)
-        character.y -= gravityConstant
-        character.rect.y = character.y
-        if character == Characters[0]:
-            reset0(True)
-
-        if character == Characters[0]:
-            canJump0(True)
-    else: 
-        characterOnPlatform = False
-
-
-    if character.rect.top == platform.rect.bottom and platform.rect.left < character.rect.x+character.width and platform.rect.right > character.rect.x:
-        character.y += character.speed
-        character.rect.y = character.y
-        character.velocity = 0
-    
-    if character.rect.left == platform.rect.right: 
-        if character.rect.y+character.height > platform.rect.top and character.rect.y < platform.rect.bottom:            
-            character.x += character.speed
-            character.rect.x = character.x
-            
-    if character.rect.right == platform.rect.left: 
-        if character.rect.y+character.height > platform.rect.top and character.rect.y < platform.rect.bottom:            
-            character.x -= character.speed
-            character.rect.x = character.x
 
 
 
 
-def gravity(character): # Functions that handles gravity move0ment
-    if character.y < HEIGHT - character.height and characterOnPlatform == False:
-        #print(character.velocity)
-        if character.velocity < 1.2:
-            character.y += character.velocity
-            character.velocity += gravityConstant - 0.01
-        else: 
-            character.y += character.velocity
-        character.rect.y = character.y
-        if character == Characters[0]:
-            canJump0(False)
-    else: 
-        if character == Characters[0]:
-            reset0(True)
 
-        if character == Characters[0]:
-            canJump0(True)
+
+
 
 
 
@@ -318,80 +246,87 @@ def collision(character, obj): # Function for testing collision and plays a soun
 
 #########################################################################
 
+def rectangularCollision(rectangle1, rectangle2):
+    return(rectangle1.x + rectangle1.width >=
+      rectangle2.rect.x and                           #right
 
- 
-def move0(character): # Handle character move0ment WASD   
-    keys = pygame.key.get_pressed()
-    global timeKeyPressed_W
+    rectangle1.x <=
+      rectangle2.rect.x + rectangle2.rect.width  and   #left
+
+    rectangle1.y <=
+      rectangle2.rect.y + rectangle2.rect.height and   #Upp
+
+    rectangle1.y + rectangle1.height >=                #Down
+      rectangle2.rect.y
+  )
+
+
+
+
+def gravity(character): # Functions that handles gravity move0ment
+    if character.y < HEIGHT - character.height:
+        if character.vY < 100 and not character.collision["down"]:
+            character.vY += gravityConstant
+canJump = False
+        
+def characterVelocity(character): # Handle character move0ment WASD   
+    global canJump
+    if keyPress["a"] and not keyPress["d"]:
+        character.vX = -SPEED
+    elif keyPress["d"] and not keyPress["a"]:
+        character.vX = SPEED
+    else:
+        character.vX = 0
+
+    if keyPress["w"] and canJump:
+        canJump = False
+        character.vY = -2
+
+
+def platformCollision(character): # Function that handles collision detection between platforms and characters
+    global canJump
+
+    characterVelocity(character)
+    gravity(character)
+
+    character.collision = {"right": False, "left": False, "upp": False, "down": False}
     
-    if keys[pygame.K_d] and character.x < WIDTH-character.width:
-        character.x += character.speed
-        character.rect.x = character.x
-    if keys[pygame.K_a] and character.x > 0:
-        character.x -= character.speed
-        character.rect.x = character.x
-    if keys[pygame.K_w] and character.y > 0 and jumpAllowed_W == True and key_wUP == False:
-        timeKeyPressed_W += 1
-        #print(timeKeyPressed_W) 
+    character.x += character.vX
+    character.rect.x = character.x
+    
+    for i in range(len(Platforms)):
+        platform = Platforms[i]
 
-        if timeKeyPressed_W < JUMPDURATION:
-            character.velocity = -1.6
-            character.y -= character.velocity
-            character.rect.y = character.y  
+        if character.rect.colliderect(platform.rect):
+            if character.vX > 0:
+                character.x = platform.rect.left - character.width
+                character.collision["right"]  = True 
+            if character.vX < 0:
+                character.x = platform.rect.right
+                character.collision["left"]  = True
 
+    character.rect.x = character.x
 
+    character.y += character.vY
+    character.rect.y = character.y
 
-def move01(character): # Handle charater movment arrow keys
-    keys = pygame.key.get_pressed()
-    global timeKeyPressed_UP
-    if keys[pygame.K_RIGHT] and character.x < WIDTH-character.width:
-        character.x += character.speed
-        character.rect.x = character.x
-    if keys[pygame.K_LEFT] and character.x > 0:
-        character.x -= character.speed
-        character.rect.x = character.x
-    if keys[pygame.K_UP] and character.y > 0 and jumpAllowed_UP == True and key_upUP == False:
-        timeKeyPressed_UP += 1
-        #print(timeKeyPressed_UP)
-
-
-        if timeKeyPressed_UP < JUMPDURATION:
-            character.y -= character.speed+.075
-            character.rect.y = character.y
-
-
-def reset0(reset): # resets the counter for jumping for the character with WASD controlls
-    if reset == True:
-        global timeKeyPressed_W
-        timeKeyPressed_W = 0
-
-
-def reset1(reset): # resets the counter for jumping for the character with arrow keys controlls
-    if reset == True:
-        global timeKeyPressed_UP
-        global key_upUP
-        timeKeyPressed_UP = 0
-        key_upUP = False
-
-
-def canJump0(canJump): # Checks if the character can jump WASD controlls
-    global jumpAllowed_W
-    global key_wUP
-    if canJump == False and timeKeyPressed_W == 0:
-        jumpAllowed_W = False
-        key_wUP = False
-    else:
-        jumpAllowed_W = True
+    for i in range(len(Platforms)):
+        platform = Platforms[i]
         
-        
-def canJump1(canJump): # Checks if the character can jump arrow keys controlls
-    global jumpAllowed_UP
-    if canJump == False and timeKeyPressed_UP == 0:
-        jumpAllowed_UP = False
-    else:
-        jumpAllowed_UP = True
+        if character.rect.colliderect(platform.rect):
+            if character.vY > 0:
+                character.y = platform.rect.top - character.height
+                character.collision["down"] = True
+                character.vY = 0
+                canJump = True
+            if character.vY < 0:
+               character.y = platform.rect.bottom
+               character.collision["upp"] = True 
+               character.vY = 0
 
+    character.rect.y = character.y
 
+   
 #########################################################################        
 
 
@@ -399,22 +334,43 @@ def canJump1(canJump): # Checks if the character can jump arrow keys controlls
 makeLevel(levels[0]) # Loads the level
 # print(imported_lists) Test to see that the levels load correctly
 
+keyPress = {"w": False, "a": False, "s": False, "d": False}
 
 running = True
+
 while running: # Main loop
-    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_a:
+                keyPress["a"] = True
+            if event.key == pygame.K_d:
+                keyPress["d"] = True
+            if event.key == pygame.K_w:
+                keyPress["w"] = True
+            if event.key == pygame.K_s:
+                keyPress["s"] = True
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_a:
+                keyPress["a"] = False
+            if event.key == pygame.K_d:
+                keyPress["d"] = False
+            if event.key == pygame.K_w:
+                keyPress["w"] = False
+            if event.key == pygame.K_s:
+                keyPress["s"] = False
+
 
 
 #########################################################################
 
 
     #Calls function that handles movment events
-    move0(Characters[0])
-    checkKeyUp()
+    #move0(Characters[0])
 
+
+    #print(Characters[0].vY)
 
 #########################################################################   
 
@@ -425,23 +381,17 @@ while running: # Main loop
             collision(Characters[o], Obstacles[i])
 
 
-#########################################################################
-
-
-
-    #Calls function that handles gravity
-    for i in range(len(Characters)):
-        gravity(Characters[i])
+########################################################################
 
 
     #Calls function that handles Platform collision
-    for o in range(len(Characters)):
-        for i in range(len(Platforms)):
-            platformCollision(Characters[o], Platforms[i])
-            if rectangularCollision(Characters[0], Platforms[i]):
-                print(i)
+
+    platformCollision(Characters[0])
 
 
+    
+
+    
 
 
     #Calls function that checks if you won
@@ -449,7 +399,7 @@ while running: # Main loop
         for i in range(len(winAreas)):
             winCollision(Characters[o], winAreas[i])
 
-
+   
 
 #########################################################################  
  
