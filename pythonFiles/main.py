@@ -24,6 +24,7 @@ characterOnPlatform = False
 
 
 
+
 #########################################################################
 
 
@@ -226,7 +227,7 @@ characterOnPlatform = True
 
 
 
-def collision(character, obj): # Function for testing collision and plays a sound if you collided and then exits the game
+def collisionSpike(character, obj): # Function for testing collision and plays a sound if you collided and then exits the game
     global nrOfDeaths
     global running
     if character.rect.colliderect(obj.rect):
@@ -261,16 +262,13 @@ def rectangularCollision(rectangle1, rectangle2):
   )
 
 
-
-
 def gravity(character): # Functions that handles gravity move0ment
     if character.y < HEIGHT - character.height:
         if character.vY < 100 and not character.collision["down"]:
             character.vY += gravityConstant
-canJump = False
+
         
 def characterVelocity(character): # Handle character move0ment WASD   
-    global canJump
     if keyPress["a"] and not keyPress["d"]:
         character.vX = -SPEED
     elif keyPress["d"] and not keyPress["a"]:
@@ -278,16 +276,23 @@ def characterVelocity(character): # Handle character move0ment WASD
     else:
         character.vX = 0
 
-    if keyPress["w"] and canJump:
-        canJump = False
+    if keyPress["w"] and character.collision["down"]:
         character.vY = -2
 
+def boarder(character):
+    if character.x < 0:
+        character.x = 0
+    if character.x + character.width > WIDTH:
+        character.x = WIDTH - character.width
+    if character.y < 0:
+        character.y = 0
+    if character.y + character.height > HEIGHT:
+        character.y = HEIGHT - character.height
 
-def platformCollision(character): # Function that handles collision detection between platforms and characters
-    global canJump
-
+def Collision(character): # Function that handles collision detection between platforms and characters
     characterVelocity(character)
     gravity(character)
+    boarder(character)
 
     character.collision = {"right": False, "left": False, "upp": False, "down": False}
     
@@ -318,7 +323,6 @@ def platformCollision(character): # Function that handles collision detection be
                 character.y = platform.rect.top - character.height
                 character.collision["down"] = True
                 character.vY = 0
-                canJump = True
             if character.vY < 0:
                character.y = platform.rect.bottom
                character.collision["upp"] = True 
@@ -378,7 +382,7 @@ while running: # Main loop
    #Calls function that handles collision
     for o in range(len(Characters)):
         for i in range(len(Obstacles)):
-            collision(Characters[o], Obstacles[i])
+            collisionSpike(Characters[o], Obstacles[i])
 
 
 ########################################################################
@@ -386,7 +390,7 @@ while running: # Main loop
 
     #Calls function that handles Platform collision
 
-    platformCollision(Characters[0])
+    Collision(Characters[0])
 
 
     
