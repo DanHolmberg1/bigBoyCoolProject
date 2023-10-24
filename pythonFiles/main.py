@@ -13,7 +13,6 @@ STARTPOSX = 5 # Start position on the x axis
 STARTPOSY = HEIGHT - 50 # Start position on the y axis
 gravityConstant = .028 # Gravity constant in pixels per game tick
 
-winSound = pygame.mixer.Sound('winSound.mp3') # Sound for the win sound
 file_path = 'levels.txt' # File path for textfile with all the levels
 levelNr = 0
 nrOfDeaths = 0
@@ -159,7 +158,6 @@ def win(): # When you complete a map
     global winAreas
     global levelNr
     
-    winSound.play()
     #pygame.time.delay(int(winSound.get_length()*1000)) # Detta dödar men vi kan skita i den :)
     print(f"You completed area {levelNr+1}!")
     levelNr += 1
