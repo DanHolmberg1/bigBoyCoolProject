@@ -408,7 +408,6 @@ while running: # Main loop
 
     #Calls function that checks if you won
     for i in range(len(winAreas)):
-        print(winAreas[i])
         winCollision(Characters[0], winAreas[i])
 
    
