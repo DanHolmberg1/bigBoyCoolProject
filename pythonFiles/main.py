@@ -12,7 +12,8 @@ SPEED = 0.7 # Character speed in pixels per game tick
 STARTPOSX = 5 # Start position on the x axis
 STARTPOSY = HEIGHT - 50 # Start position on the y axis
 gravityConstant = .028 # Gravity constant in pixels per game tick
-
+winSound = pygame.mixer.Sound('soundFiles\winSound.mp3')
+lossSound = pygame.mixer.Sound('soundFiles\lossSound.mp3')
 file_path = 'levels.txt' # File path for textfile with all the levels
 levelNr = 0
 nrOfDeaths = 0
@@ -21,8 +22,6 @@ FPS = 240 # Frames per second (game ticks per second)
 characterOnPlatformList = []
 characterOnPlatform = False
 timeKeyPressed_W = 0
-
-
 
 #########################################################################
 
@@ -158,7 +157,8 @@ def win(): # When you complete a map
     global winAreas
     global levelNr
     
-    #pygame.time.delay(int(winSound.get_length()*1000)) # Detta dödar men vi kan skita i den :)
+    
+    winSound.play()
     print(f"You completed area {levelNr+1}!")
     levelNr += 1
     print(levelNr)
@@ -203,14 +203,6 @@ characterOnPlatform = True
 
 
 
-
-
-
-
-
-
-
-
 #########################################################################
 
 
@@ -230,7 +222,7 @@ def spikeCollision(character, obj): # Function for testing spikeCollision and pl
         else: 
             makeLevel(levels[0])
             nrOfDeaths = 0        
-
+ 
 
 #########################################################################
 
