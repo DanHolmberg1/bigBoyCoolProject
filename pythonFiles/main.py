@@ -22,12 +22,17 @@ FPS = 240 # Frames per second (game ticks per second)
 characterOnPlatformList = []
 characterOnPlatform = False
 timeKeyPressed_W = 0
+timeKeyPressed_Up = 0
+keyPressDownCntCharacter1 = 0
+keyPressUppCntCharacter1 = 0
+keyPressDownCntCharacter2 = 0
+keyPressUppCntCharacter2 = 0
 w, h = 100, 200
 
-p1Image = pygame.image.load('p1.png')
-grassImage = pygame.image.load('Grass.png')
-dirtImage = pygame.image.load('Dirt.png')
-goalImage = pygame.image.load('Goal.png')
+p1Image = pygame.image.load('images\p1.png')
+grassImage = pygame.image.load('images\Grass.png')
+dirtImage = pygame.image.load('images\Dirt.png')
+goalImage = pygame.image.load('images\Goal.png')
 #########################################################################
 
 
@@ -40,20 +45,20 @@ pygame.display.set_caption("BIGBOYCOOLPROJECT :)")
 
 
 class Character: # A class for the creation of a characters
-    def __init__(self, x, y, width, height, color, speed):
+    def __init__(self, x, y, width, height, image, speed):
         self.rect = pygame.Rect(x, y, width, height) #hitbox
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-        self.color = color
+        self.image = image
         self.speed = speed
         self.vY = 0 
         self.vX = 0 
         self.spikeCollision = {"right": False, "left": False, "upp": False, "down": False}
         
     def draw(self):
-        screen.blit(p1Image, (self.x,self.y))
+        screen.blit(self.image, (self.x,self.y))
         #pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
        
 class Obstacle: # A class for the creation of a obstacles
@@ -193,16 +198,13 @@ def win(): # When you complete a map
 Obstacles = [] # A list of all the obstacles
 
     
-Characters = [Character(STARTPOSX, STARTPOSY, 20, 20, (255, 100, 100), SPEED)] # A list of all the characters
+Characters = [Character(STARTPOSX, STARTPOSY, 20, 20, p1Image, SPEED), Character(STARTPOSX, STARTPOSY, 20, 20, p1Image, SPEED)] # A list of all the characters
 
 
 Platforms = [] # A list of all the platforms
 
 
 winAreas = [] # A list of all the win areas :)
-
-#########################################################################
-
 
 
 #########################################################################
@@ -215,17 +217,7 @@ def winCollision(character, platform): # Function that checks if you colide with
 characterOnPlatform = True 
 
 
-
-
-
-
-
-
-
-
-
 #########################################################################
-
 
 
 def spikeCollision(character, obj): # Function for testing spikeCollision and plays a sound if you collided and then exits the game
@@ -234,15 +226,11 @@ def spikeCollision(character, obj): # Function for testing spikeCollision and pl
     if character.rect.colliderect(obj.rect):
         nrOfDeaths += 1
         #print(f"You have {3-nrOfDeaths} lifes left!")
-        if nrOfDeaths < 1000:
-            for i in range(len(Characters)):
-                Characters[i].x = STARTPOSX
-                Characters[i].y = STARTPOSY
-                Characters[i].rect.x = STARTPOSX
-                Characters[i].rect.y = STARTPOSY
-        else: 
-            makeLevel(levels[0])
-            nrOfDeaths = 0        
+        character.x = STARTPOSX
+        character.y = STARTPOSY
+        character.rect.x = STARTPOSX
+        character.rect.y = STARTPOSY
+          
 
 
 #########################################################################
@@ -266,49 +254,62 @@ def boarder(character):
     if character.y + character.height > HEIGHT:
         character.y = HEIGHT - character.height
 
-keyPressDownCnt = 0
-keyPressUppCnt = 0
-
 
 def jumpCounter():
-    global keyPressDownCnt
-    global keyPressUppCnt
+    global keyPressDownCntCharacter1
+    global keyPressUppCntCharacter1
+    global keyPressDownCntCharacter2
+    global keyPressUppCntCharacter2
     global timeKeyPressed_W
+    global timeKeyPressed_Up
     if keyPress["w"]:
-        keyPressDownCnt = 1
-    if not keyPress["w"] and keyPressDownCnt == 1: 
-        keyPressUppCnt += 1
-        keyPressDownCnt = 0
+        keyPressDownCntCharacter1 = 1
+    if not keyPress["w"] and keyPressDownCntCharacter1 == 1: 
+        keyPressUppCntCharacter1 += 1
+        keyPressDownCntCharacter1 = 0
         timeKeyPressed_W = 0
-
+    if keyPress["up"]:
+        keyPressDownCntCharacter2 = 1
+    if not keyPress["up"] and keyPressDownCntCharacter2 == 1: 
+        keyPressUppCntCharacter2 += 1
+        keyPressDownCntCharacter2 = 0
+        timeKeyPressed_Up = 0
         
 maxJumps = 2
 
 
-    
-
-
 def characterVelocity(character): # Handle character move0ment WASD   
-
     global timeKeyPressed_W
-    if keyPress["a"] and not keyPress["d"]:
+    global timeKeyPressed_Up
+    
+    if character == Characters[0] and keyPress["a"] and not keyPress["d"]:
         character.vX = -SPEED
-    elif keyPress["d"] and not keyPress["a"]:
+    elif character == Characters[0] and keyPress["d"] and not keyPress["a"]:
+        character.vX = SPEED
+    elif  character == Characters[1] and keyPress["left"] and not keyPress["right"]:
+        character.vX = -SPEED
+    elif  character == Characters[1] and keyPress["right"] and not keyPress["left"]:
         character.vX = SPEED
     else:
         character.vX = 0
-
-    if keyPress["w"] and timeKeyPressed_W < 40 and keyPressUppCnt < maxJumps:
+        
+        
+    if character == Characters[0] and keyPress["w"] and timeKeyPressed_W < 40 and keyPressUppCntCharacter1 < maxJumps:
         timeKeyPressed_W += 1
-
+        character.vY = -1.1        
+        
+    if character == Characters[1] and keyPress["up"] and timeKeyPressed_Up < 40 and keyPressUppCntCharacter2 < maxJumps:
+        timeKeyPressed_Up += 1
         character.vY = -1.1
 
 
 def collision(character): # Function that handles spikeCollision detection between platforms and characters
     global timeKeyPressed_W
+    global timeKeyPressed_Up
     global jumpReset
     global jump
-    global keyPressUppCnt
+    global keyPressUppCntCharacter1
+    global keyPressUppCntCharacter2
     characterVelocity(character)
     gravity(character)
     boarder(character)
@@ -337,18 +338,31 @@ def collision(character): # Function that handles spikeCollision detection betwe
         platform = Platforms[i]
         
         if character.rect.colliderect(platform.rect):
-            if character.vY > 0:
+            if character == Characters[0] and character.vY > 0:
                 character.y = platform.rect.top - character.height
                 character.spikeCollision["down"] = True
                 character.vY = 0
                 timeKeyPressed_W = 0
-                keyPressUppCnt = 0
+                keyPressUppCntCharacter1 = 0
 
-            if character.vY < 0:
+            if character == Characters[0] and character.vY < 0:
                character.y = platform.rect.bottom
                character.spikeCollision["upp"] = True 
                character.vY = 0
 
+            if character == Characters[1] and character.vY > 0:
+                character.y = platform.rect.top - character.height
+                character.spikeCollision["down"] = True
+                character.vY = 0
+                timeKeyPressed_Up = 0
+                keyPressUppCntCharacter2 = 0
+
+            if character == Characters[1] and character.vY < 0:
+               character.y = platform.rect.bottom
+               character.spikeCollision["upp"] = True 
+               character.vY = 0
+               
+               
     character.rect.y = character.y
 
    
@@ -365,7 +379,7 @@ def toggleFullscreen():
 makeLevel(levels[0]) # Loads the level
 # print(imported_lists) Test to see that the levels load correctly
 
-keyPress = {"w": False, "a": False, "s": False, "d": False}
+keyPress = {"w": False, "a": False, "s": False, "d": False, "up": False, "left": False, "right": False, "down": False}
 
 running = True
 
@@ -378,10 +392,18 @@ while running: # Main loop
                 keyPress["a"] = True
             if event.key == pygame.K_d:
                 keyPress["d"] = True
-            if event.key == pygame.K_KP0:
+            if event.key == pygame.K_w:
                 keyPress["w"] = True
             if event.key == pygame.K_s:
                 keyPress["s"] = True
+            if event.key == pygame.K_LEFT:
+                keyPress["left"] = True
+            if event.key == pygame.K_RIGHT:
+                keyPress["right"] = True
+            if event.key == pygame.K_UP:
+                keyPress["up"] = True
+            if event.key == pygame.K_DOWN:
+                keyPress["down"] = True                
             if event.key == pygame.K_F11:
                 toggleFullscreen()
         if event.type == pygame.KEYUP:
@@ -389,21 +411,19 @@ while running: # Main loop
                 keyPress["a"] = False
             if event.key == pygame.K_d:
                 keyPress["d"] = False
-            if event.key == pygame.K_KP0:
+            if event.key == pygame.K_w:
                 keyPress["w"] = False
             if event.key == pygame.K_s:
                 keyPress["s"] = False
+            if event.key == pygame.K_LEFT:
+                keyPress["left"] = False
+            if event.key == pygame.K_RIGHT:
+                keyPress["right"] = False
+            if event.key == pygame.K_UP:
+                keyPress["up"] = False
+            if event.key == pygame.K_DOWN:
+                keyPress["down"] = False
 
-
-
-#########################################################################
-
-
-    #Calls function that handles movment events
-    #move0(Characters[0])
-
-
-    #print(Characters[0].vY)
 
 #########################################################################   
 
@@ -420,17 +440,15 @@ while running: # Main loop
     #Calls function that handles Platform spikeCollision
 
     collision(Characters[0])
+    collision(Characters[1])
 
     jumpCounter()
     
-
-    
-
-
     #Calls function that checks if you won
     for i in range(len(winAreas)):
 
         winCollision(Characters[0], winAreas[i])
+        winCollision(Characters[1], winAreas[i])
 
    
 
