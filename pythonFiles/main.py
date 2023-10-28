@@ -24,9 +24,9 @@ characterOnPlatform = False
 timeKeyPressed_W = 0
 w, h = 100, 200
 
-p1Image = pygame.image.load('PlayerImages\p1.png')
-grassImage = pygame.image.load('PlatformImages\Grass.png')
-dirtImage = pygame.image.load('PlatformImages\Dirt.png')
+p1Image = pygame.image.load('p1.png')
+grassImage = pygame.image.load('Grass.png')
+dirtImage = pygame.image.load('Dirt.png')
 goalImage = pygame.image.load('Goal.png')
 #########################################################################
 
