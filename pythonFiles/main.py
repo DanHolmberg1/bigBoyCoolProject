@@ -504,20 +504,20 @@ def options():
         screen.fill("white")
         
         OPTIONS_TEXT0 = get_font(10).render("This is the controlls screen.", True, "Black")
-        OPTIONS_RECT0 = OPTIONS_TEXT0.get_rect(center=(300, 100))
+        OPTIONS_RECT0 = OPTIONS_TEXT0.get_rect(center=(WIDTH/2, 100))
         
         OPTIONS_TEXT1 = get_font(9).render("Player ONE uses WASD to controll the it's character", True, "Black")
-        OPTIONS_RECT1 = OPTIONS_TEXT1.get_rect(center=(300, 150))
+        OPTIONS_RECT1 = OPTIONS_TEXT1.get_rect(center=(WIDTH/2, 150))
         
         OPTIONS_TEXT2 = get_font(9).render("Player TWO uses the arrow keys to controll the it's character", True, "Black")
-        OPTIONS_RECT2 = OPTIONS_TEXT2.get_rect(center=(300, 200))
+        OPTIONS_RECT2 = OPTIONS_TEXT2.get_rect(center=(WIDTH/2, 200))
         
         screen.blit(OPTIONS_TEXT0, OPTIONS_RECT0)
         screen.blit(OPTIONS_TEXT1, OPTIONS_RECT1)
         screen.blit(OPTIONS_TEXT2, OPTIONS_RECT2)
 
 
-        OPTIONS_BACK = Button(image=None, pos=(300, 460), 
+        OPTIONS_BACK = Button(image=None, pos=(WIDTH/2, 460), 
                             text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
 
         OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
@@ -542,13 +542,13 @@ def mainMenu():
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
         MENU_TEXT = get_font(30).render("MAIN MENU", True, "#b68f40")
-        MENU_RECT = MENU_TEXT.get_rect(center=(300, 100))
+        MENU_RECT = MENU_TEXT.get_rect(center=(WIDTH/2, 100))
 
-        PLAY_BUTTON = Button(image=pygame.image.load("images/Play Rect.png"), pos=(300, 250), 
+        PLAY_BUTTON = Button(image=pygame.image.load("images/Play Rect.png"), pos=(WIDTH/2, 250), 
                             text_input="PLAY", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-        OPTIONS_BUTTON = Button(image=pygame.image.load("images/Options Rect.png"), pos=(300, 375), 
+        OPTIONS_BUTTON = Button(image=pygame.image.load("images/Options Rect.png"), pos=(WIDTH/2, 375), 
                             text_input="OPTIONS", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-        QUIT_BUTTON = Button(image=pygame.image.load("images/Quit Rect.png"), pos=(300, 500), 
+        QUIT_BUTTON = Button(image=pygame.image.load("images/Quit Rect.png"), pos=(WIDTH/2, 500), 
                             text_input="QUIT", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
 
         screen.blit(MENU_TEXT, MENU_RECT)
