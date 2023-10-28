@@ -1,6 +1,6 @@
-import pygame
-import sys
-import math
+import pygame, sys, math
+from button import Button
+
 
 pygame.init()
 
@@ -13,7 +13,6 @@ SPEED = 0.7 # Character speed in pixels per game tick
 STARTPOSX = 5 # Start position on the x axis
 STARTPOSY = HEIGHT - 50 # Start position on the y axis
 gravityConstant = .028 # Gravity constant in pixels per game tick
-
 file_path = 'levels.txt' # File path for textfile with all the levels
 levelNr = 0
 nrOfDeaths = 0
@@ -28,6 +27,9 @@ keyPressUppCntCharacter1 = 0
 keyPressDownCntCharacter2 = 0
 keyPressUppCntCharacter2 = 0
 w, h = 100, 200
+keyPress = {"w": False, "a": False, "s": False, "d": False, "up": False, "left": False, "right": False, "down": False}
+running = False
+
 
 p1Image = pygame.image.load('images\p1.png')
 grassImage = pygame.image.load('images\Grass.png')
@@ -192,6 +194,9 @@ def win(): # When you complete a map
     
     
 
+def get_font(size): # Returns Press-Start-2P in the desired size
+    return pygame.font.Font("images/font.ttf", size)
+
 #########################################################################
 
       
@@ -224,8 +229,6 @@ def spikeCollision(character, obj): # Function for testing spikeCollision and pl
     global nrOfDeaths
     global running
     if character.rect.colliderect(obj.rect):
-        nrOfDeaths += 1
-        #print(f"You have {3-nrOfDeaths} lifes left!")
         character.x = STARTPOSX
         character.y = STARTPOSY
         character.rect.x = STARTPOSX
@@ -379,14 +382,19 @@ def toggleFullscreen():
 makeLevel(levels[0]) # Loads the level
 # print(imported_lists) Test to see that the levels load correctly
 
-keyPress = {"w": False, "a": False, "s": False, "d": False, "up": False, "left": False, "right": False, "down": False}
 
-running = True
 
-while running: # Main loop
+
+
+
+
+
+#########################################################################
+def mainLoop():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
+            pygame.quit()
+            sys.exit()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
                 keyPress["a"] = True
@@ -423,8 +431,6 @@ while running: # Main loop
                 keyPress["up"] = False
             if event.key == pygame.K_DOWN:
                 keyPress["down"] = False
-
-
 #########################################################################   
 
 
@@ -453,7 +459,9 @@ while running: # Main loop
    
 
 #########################################################################  
- 
+  
+  
+  
   
     # Clear the screen
     screen.fill(WHITE)
@@ -484,6 +492,85 @@ while running: # Main loop
 
     clock.tick(FPS)
     
+#########################################################################
+def play():
+    while True:
+       mainLoop()
     
-pygame.quit()
-sys.exit()
+def options():
+    while True:
+        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
+
+        screen.fill("white")
+        
+        OPTIONS_TEXT0 = get_font(10).render("This is the controlls screen.", True, "Black")
+        OPTIONS_RECT0 = OPTIONS_TEXT0.get_rect(center=(300, 100))
+        
+        OPTIONS_TEXT1 = get_font(9).render("Player ONE uses WASD to controll the it's character", True, "Black")
+        OPTIONS_RECT1 = OPTIONS_TEXT1.get_rect(center=(300, 150))
+        
+        OPTIONS_TEXT2 = get_font(9).render("Player TWO uses the arrow keys to controll the it's character", True, "Black")
+        OPTIONS_RECT2 = OPTIONS_TEXT2.get_rect(center=(300, 200))
+        
+        screen.blit(OPTIONS_TEXT0, OPTIONS_RECT0)
+        screen.blit(OPTIONS_TEXT1, OPTIONS_RECT1)
+        screen.blit(OPTIONS_TEXT2, OPTIONS_RECT2)
+
+
+        OPTIONS_BACK = Button(image=None, pos=(300, 460), 
+                            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
+
+        OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
+        OPTIONS_BACK.update(screen)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
+                    mainMenu()
+
+        pygame.display.update()
+
+
+
+def mainMenu():
+    while True:
+        screen.fill("black")
+
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
+
+        MENU_TEXT = get_font(30).render("MAIN MENU", True, "#b68f40")
+        MENU_RECT = MENU_TEXT.get_rect(center=(300, 100))
+
+        PLAY_BUTTON = Button(image=pygame.image.load("images/Play Rect.png"), pos=(300, 250), 
+                            text_input="PLAY", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
+        OPTIONS_BUTTON = Button(image=pygame.image.load("images/Options Rect.png"), pos=(300, 375), 
+                            text_input="OPTIONS", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
+        QUIT_BUTTON = Button(image=pygame.image.load("images/Quit Rect.png"), pos=(300, 500), 
+                            text_input="QUIT", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
+
+        screen.blit(MENU_TEXT, MENU_RECT)
+
+        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+            button.changeColor(MENU_MOUSE_POS)
+            button.update(screen)
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    play()
+                if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    options()
+                if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    pygame.quit()
+                    sys.exit()
+
+        pygame.display.update()
+
+mainMenu()
+    
