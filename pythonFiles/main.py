@@ -32,6 +32,7 @@ running = False
 collisionOn = True
 
 p1Image = pygame.image.load('images\p1.png')
+p2Image = pygame.image.load('images\p2.png')
 grassImage = pygame.image.load('images\Grass.png')
 dirtImage = pygame.image.load('images\Dirt.png')
 goalImage = pygame.image.load('images\Goal.png')
@@ -198,9 +199,9 @@ def win(): # When you complete a map
         
     Obstacles = []
     Platforms = []
-    winAreas = []    
-    makeLevel(levels[levelNr])
+    winAreas = [] 
     
+    makeLevel(levels[levelNr])
     
     
 
@@ -213,7 +214,7 @@ def get_font(size): # Returns Press-Start-2P in the desired size
 Obstacles = [] # A list of all the obstacles
 
     
-Characters = [Character(STARTPOSX, STARTPOSY, 20, 20, p1Image, SPEED), Character(STARTPOSX, STARTPOSY, 20, 20, p1Image, SPEED)] # A list of all the characters
+Characters = [Character(STARTPOSX, STARTPOSY, 20, 20, p1Image, SPEED), Character(STARTPOSX, STARTPOSY, 20, 20, p2Image, SPEED)] # A list of all the characters
 
 
 Platforms = [] # A list of all the platforms
@@ -226,8 +227,13 @@ winAreas = [] # A list of all the win areas :)
 
 
 def winCollision(character, platform): # Function that checks if you colide with the block that makes you win
-    if character.rect.colliderect(platform.rect):
-        win()
+    try: 
+       character.rect.colliderect(platform.rect)
+    except:
+        screen.fill("white")
+    else: 
+        if character.rect.colliderect(platform.rect):
+            win()
 
 characterOnPlatform = True 
 
@@ -474,7 +480,6 @@ def mainLoop():
     
     #Calls function that checks if you won
     for i in range(len(winAreas)):
-
         winCollision(Characters[0], winAreas[i])
         winCollision(Characters[1], winAreas[i])
 
