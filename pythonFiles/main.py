@@ -492,7 +492,7 @@ def mainLoop():
   
   
     # Clear the screen
-    screen.fill(WHITE)
+    screen.fill((46, 203, 255))
 
 
 #########################################################################
