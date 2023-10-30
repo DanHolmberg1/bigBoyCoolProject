@@ -120,15 +120,14 @@ levels = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 0, 0, 5.0, 0, 0, 5.0, 0, 2.5, 0, 0, 5.0, 5.0, 5.0, 5.0, 5.0, 2.0, 0, 5.0, 0, 0, 2.0, 0, 5.0, 0, 2.0, 5.0, 0, 2.0, 0, 2.25, 2.75, 0, 0, 0, 5.0, 2.5, 0, 5.0, 0, 2.25, 5.0, 0, 0, 0, 2.5, 5.0, 0, 2.5, 0, 0, 0, 0, 2.0, 0, 5.0, 0, 3.0, 5.0, 2.0, 2.0, 5.0, 0, 0, 0, 2.25, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 2.0, 2.0, 2.0, 2.0, 5.0, 0, 0, 0, 0, 0, 0, 0, 0, 5.0, 2.75, 2.25, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 0, 5.0, 5.0, 5.0, 5.0, 5.0, 2.0, 2.0, 5.0, 5.0, 5.0, 5.0, 2.5, 5.0, 0, 2.25, 5.0, 5.0, 5.0, 5.0, 0, 5.0, 0, 0, 0, 5.0, 5.0, 5.0, 5.0, 2.75, 2.25, 5.0, 2.0, 5.0, 0, 2.25, 0, 0, 2.25, 5.0, 0, 0, 0, 2.0, 2.0, 0, 0, 0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 0, 2.25, 2.25, 2.5, 2.25, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 0, 5.0, 0, 0, 0, 0, 0, 0, 0, 0, 2.75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0]]
 
 
-def read_lists_from_file(filename): # Reads levels.txt to load maps
-    with open(filename, 'r') as file:
-        lists = []
-        for line in file:
-            elements = line.strip().split(', ')  # Assuming elements are separated by a comma and a space
-            list_data = [element.strip() for element in elements]
-            lists.append(list_data)
-    return lists 
-
+#def read_lists_from_file(filename): # Reads levels.txt to load maps
+#    with open(filename, 'r') as file:
+#        lists = []
+#        for line in file:
+#            elements = line.strip().split(', ')  # Assuming elements are separated by a comma and a space
+#            list_data = [element.strip() for element in elements]
+#            lists.append(list_data)
+#    return lists 
 
 def makeLevel(level): # Ask David
     cnt = 0
@@ -136,42 +135,42 @@ def makeLevel(level): # Ask David
     height = 30
     spikeWidth = 20
     spikeHeight = 7
+    
     for x in range(20):
         for y in range(20):
             if math.floor(level[cnt]) == 1:
                 platform = Platform(y*30, x*30,width,height, grassImage)
                 Platforms.append(platform) 
+                
             elif math.floor(level[cnt]) == 2:
-                #print("hello")
                 if level[cnt]%1 == 0:
-                    #print("hello1")
                     triangle_points = [(y*30, x*30+30), (y*30 +15, x*30+15), (y*30+30, x*30+30)]
                     xS = triangle_points[0][0] + (30 - spikeWidth)/2
                     yS = triangle_points[0][1] - spikeHeight
                     obstacle = Obstacle(xS, yS, spikeWidth, spikeHeight, (128,128,128), triangle_points)
                     Obstacles.append(obstacle)
-                elif level[cnt]%1 == 0.25: 
-                    #print("hello2")
+                    
+                elif level[cnt]%1 == 0.25:
                     triangle_points = [(y*30+30, x*30), (y*30 +15, x*30+15), (y*30+30, x*30+30)]
                     xS = triangle_points[0][0] - (spikeHeight)
                     yS = triangle_points[0][1] + (30-spikeWidth)/2
                     obstacle = Obstacle(xS, yS, spikeHeight, spikeWidth, (128,128,128), triangle_points)
                     Obstacles.append(obstacle)
+                    
                 elif level[cnt]%1 == 0.5:
-                    #print("hello3")
                     triangle_points = [(y*30, x*30), (y*30 +15, x*30+15), (y*30+30, x*30)]
                     xS = triangle_points[0][0] + (30 - spikeWidth)/2
                     yS = triangle_points[0][1]
                     obstacle = Obstacle(xS, yS, spikeWidth, spikeHeight, (128,128,128), triangle_points)
                     Obstacles.append(obstacle)
+                    
                 elif level[cnt]%1 == 0.75:
-                    #print("hello4")
                     triangle_points = [(y*30, x*30), (y*30 +15, x*30+15), (y*30, x*30+30)]
                     xS = triangle_points[0][0]
                     yS = triangle_points[0][1] + spikeHeight
                     obstacle = Obstacle(xS, yS, spikeHeight, spikeWidth, (128,128,128), triangle_points)
                     Obstacles.append(obstacle)
-              #  print()
+
             elif math.floor(level[cnt]) == 3:
                 area = winArea(y*30, x*30,width,height, (255, 0, 0))    ###This should be the finish not a platform... its now a win area :)
                 winAreas.append(area) 
@@ -189,19 +188,21 @@ def win(): # When you complete a map
     global winAreas
     global levelNr
     
-    #pygame.time.delay(int(winSound.get_length()*1000)) # Detta dödar men vi kan skita i den :)
     print(f"You completed area {levelNr+1}!")
     levelNr += 1
     print(levelNr)
-    for i in range(len(Characters)):
-        Characters[i].x = STARTPOSX
-        Characters[i].y = STARTPOSY
+    for character in Characters:
+        character.x = STARTPOSX
+        character.y = STARTPOSY
         
     Obstacles = []
     Platforms = []
     winAreas = [] 
-    
-    makeLevel(levels[levelNr])
+    if levelNr < len(levels):
+        makeLevel(levels[levelNr])
+    else:
+        mainMenu()
+        levelNr = 0
     
     
 
@@ -329,16 +330,13 @@ def collision(character): # Function that handles spikeCollision detection betwe
     global jump
     global keyPressUppCntCharacter1
     global keyPressUppCntCharacter2
-    characterVelocity(character)
-    gravity(character)
-    boarder(character)
-
+    
     character.spikeCollision = {"right": False, "left": False, "upp": False, "down": False}
     character.x += character.vX
     character.rect.x = character.x
     
-    for i in range(len(Platforms)):
-        platform = Platforms[i]
+    for platformNr in Platforms:
+        platform = platformNr
 
         if character.rect.colliderect(platform.rect):
             if character.vX > 0:
@@ -353,8 +351,8 @@ def collision(character): # Function that handles spikeCollision detection betwe
     character.y += character.vY
     character.rect.y = character.y
 
-    for i in range(len(Platforms)):
-        platform = Platforms[i]
+    for platformNr in Platforms:
+        platform = platformNr
         
         if character.rect.colliderect(platform.rect):
             if character == Characters[0] and character.vY > 0:
@@ -393,12 +391,7 @@ def toggleFullscreen():
     else:
         screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-
-#levels = read_lists_from_file(file_path)
 makeLevel(levels[0]) # Loads the level
-# print(imported_lists) Test to see that the levels load correctly
-
-
 
 def toggleCollision():
     global collisionOn
@@ -463,9 +456,9 @@ def mainLoop():
 
 
    #Calls function that handles spikeCollision
-    for o in range(len(Characters)):
-        for i in range(len(Obstacles)):
-            spikeCollision(Characters[o], Obstacles[i])
+    for character in Characters:
+        for obstacle in Obstacles:
+            spikeCollision(character, obstacle)
 
 
 ########################################################################
@@ -473,15 +466,23 @@ def mainLoop():
 
     #Calls function that handles Platform spikeCollision
 
-    collision(Characters[0])
-    collision(Characters[1])
+    #collision(Characters[0])
+    #collision(Characters[1])
+    
+    for character in Characters:
+        collision(character)
+        characterVelocity(character)
+        gravity(character)
+        boarder(character)
+
 
     jumpCounter()
     
     #Calls function that checks if you won
-    for i in range(len(winAreas)):
-        winCollision(Characters[0], winAreas[i])
-        winCollision(Characters[1], winAreas[i])
+    for winArea in winAreas:
+        for character in Characters:
+            winCollision(character, winArea)
+        #winCollision(Characters[1], winAreas[i])
 
    
 
@@ -498,17 +499,17 @@ def mainLoop():
 
 
     # Draw the character & obstacles & platforms
-    for i in range(len(Characters)):
-        Characters[i].draw()
+    for charater in Characters:
+        charater.draw()
     
-    for i in range(len(Obstacles)):
-        Obstacles[i].draw()
+    for obstacle in Obstacles:
+        obstacle.draw()
     
-    for i in range(len(Platforms)):
-        Platforms[i].draw()
+    for platform in Platforms:
+        platform.draw()
     
-    for i in range(len(winAreas)):
-        winAreas[i].draw()
+    for winArea in winAreas:
+        winArea.draw()
     
     
 
